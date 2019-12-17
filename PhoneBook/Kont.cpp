@@ -29,6 +29,11 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 		else
 			cout << "The number is incorrect" << endl;
 
+		// Occupation
+		for (int i = 0; i < 64 && occ[i] > 0; i++)
+			if ((int)occ[i] != -52)
+				job[i] = occ[i];
+
 		// city
 		if (Is_City_Corr(town))
 		{
@@ -39,15 +44,11 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 			cout << "The city is incorrect" << endl;
 
 		// Birthdate
-		try 
+		if (Is_Birth_Corr(year1, month1, day1))
 		{
-			if (Is_Birth_Corr(1900, 2019, year1)) date.year = year1; else throw exception("Year is not correct!");
-			if (Is_Birth_Corr(1, 12, month1)) date.month = month1; else throw exception("Month is not correct!");
-			if (Is_Birth_Corr(1, 31, day1)) date.day = day1; else throw exception("Day is not correct!");
-		}
-		catch (exception e)
-		{
-			cout << e.what() << endl;
+			 date.year = year1;
+			 date.month = month1; 
+			 date.day = day1;
 		}
 	}
 }
@@ -241,7 +242,7 @@ void Kont::ContDisplay(FILE* a)
 				cout << noi << ')' << ' ';
 
 			}
-			cout << ch;
+			cout << (char)ch;
 			v = ch;
 		}
 	}
@@ -257,56 +258,56 @@ void Kont::AddCont(FILE* a)
 	cout << "Enter a surname: ";
 	while (strlength(surname) == 0)
 	{
-		cin.getline(surname, 64); 
+		cin.getline(surname, 65); 
 		while (cin.fail())
 		{
 			cin.clear();
 			cin.ignore(32767, '\n');
-			cin.getline(surname, 64);
+			cin.getline(surname, 65);
 		}
 	}
 	cout << "Enter a name: ";
 	while (strlength(name) == 0)
 	{
-		cin.getline(name, 64);
+		cin.getline(name, 65);
 		while (cin.fail())
 		{
 			cin.clear();
 			cin.ignore(32767, '\n');
-			cin.getline(name, 64);
+			cin.getline(name, 65);
 		}
 	}
 	cout << "Enter the number: +380";
 	while (strlength(nom) == 0)
 	{
-		cin.getline(nom, 64);
+		cin.getline(nom, 65);
 		while (cin.fail())
 		{
 			cin.clear();
 			cin.ignore(32767, '\n');
-			cin.getline(nom, 64);
+			cin.getline(nom, 65);
 		}
 	}
 	cout << "Enter a native city: ";
 	while (strlength(city) == 0)
 	{
-		cin.getline(city, 64);
+		cin.getline(city, 65);
 		while (cin.fail())
 		{
 			cin.clear();
 			cin.ignore(32767, '\n');
-			cin.getline(city, 64);
+			cin.getline(city, 65);
 		}
 	}
 	cout << "Enter an occupation: ";
 	while (strlength(job) == 0)
 	{
-		cin.getline(job, 64);
+		cin.getline(job, 65);
 		while (cin.fail())
 		{
 			cin.clear();
 			cin.ignore(32767, '\n');
-			cin.getline(job, 64);
+			cin.getline(job, 65);
 		}
 	}
 	cout << "Enter your birthdate:" << endl;
@@ -683,17 +684,33 @@ bool Kont::Is_City_Corr(char* name)
 	return true;
 }
 
-bool Kont::Is_Birth_Corr(int a, int b, int curDate)
+bool Kont::Is_Birth_Corr(int year, int month, int day)
 {
-	if (curDate == 0 || curDate < a || curDate > b)
-	{
-		cout << "Verify day, month and year!" << endl;
-		if (cin.fail()) {
-			cout << "Incorrect Date Input!" << endl;
-			cin.clear(); cin.ignore(32767, '\n');
-		}
+	if (year > 2019 || year < 1899)
 		return false;
+	if (month > 12 || month < 0 || day < 1)
+		return false;
+	if (month == 4 || month == 6 || month == 9 || month == 11)
+	{
+		if (day > 30)
+			return false;
 	}
+	else if (month == 2)
+	{
+		if (year % 4 != 0 || year % 100 == 0)
+		{
+			if (day > 28)
+				return false;
+		}
+		else
+			if (day > 29)
+				return false;
+	}
+	else
+		if (day > 31)
+			return false;
+
+
 	return true;
 }
 
@@ -770,8 +787,6 @@ void Kont::ChangeCity()
 				else
 					return;
 			}
-
-
 	}
 }
 
@@ -789,14 +804,28 @@ void Kont::ChangeJob()
 			else
 				return;
 		}
-
-
 	}
 }
 
 void Kont::ChangeBirth()
 {
-
+	birthdate newdate;
+	while (true)
+	{
+		try {
+			cin >> newdate.day >> newdate.month >> newdate.year;
+		}
+		catch (int e)
+		{
+			cout << "Verify day, month and year!" << endl;
+			continue;
+		}
+		if (Is_Birth_Corr(newdate.day, newdate.month, newdate.year))
+		{
+			date = newdate;
+			return;
+		}
+	}
 }
 
 int Kont::strlength(char* str)

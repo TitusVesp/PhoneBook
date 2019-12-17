@@ -12,12 +12,12 @@ private:
 	char nom[13] = { '+','3','8','0' };
 	char city[64];
 	char job[64];
-	struct { unsigned int year = 0, month = 0, day = 0; } date;
+	struct birthdate { unsigned int year, month, day; } date;
 	int strlength(char* str);
 	bool Is_Surname_Corr(char* name);
 	bool Is_Num_Corr(char* mobilePhone);
 	bool Is_City_Corr(char* name);
-	bool Is_Birth_Corr(int a, int b, int curDate);
+	bool Is_Birth_Corr(int year, int month, int day);
 	void ChangeSurname();
 	void ChangeName();
 	void ChangeMob();

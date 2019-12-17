@@ -7,7 +7,7 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 		// surname
 		if (Is_Surname_Corr(surnam))
 		{
-			for (int i = 0; i < 64; i++)
+			for (int i = 0; i < 64 && surnam[i] > 0; i++)
 				surname[i] = surnam[i];
 		}
 		else
@@ -16,7 +16,7 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 		// name
 		if (Is_Name_Corr(nam))
 		{
-			for (int i = 0; i < 64; i++)
+			for (int i = 0; i < 64 && nam[i] > 0; i++)
 				name[i] = nam[i];
 		}
 		else
@@ -32,30 +32,34 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 		// city
 		if (Is_City_Corr(town))
 		{
-			for (int i = 0; i < 64; i++)
+			for (int i = 0; i < 64 && town[i] > 0; i++)
 				city[i] = town[i];
 		}
 		else
 			cout << "The city is incorrect" << endl;
 
 		// Birthdate
-		if (Is_Birth_Corr(year1, month1, day1))
+		try 
 		{
-			date.year = year1;
-			date.month = month1;
-			date.day = day1;
+			if (Is_Birth_Corr(1900, 2019, year1)) date.year = year1; else throw exception("Year is not correct!");
+			if (Is_Birth_Corr(1, 12, month1)) date.month = month1; else throw exception("Month is not correct!");
+			if (Is_Birth_Corr(1, 31, day1)) date.day = day1; else throw exception("Day is not correct!");
 		}
-		else
-			cout << "The birthdate is incorrect" << endl;
+		catch (exception e)
+		{
+			cout << e.what() << endl;
+		}
 	}
 }
 
 void Kont::Write(FILE* a)
 {
 	a = fopen("Abonent.txt", "ab");
+
 	// writing a surname
 	for (char qw : surname)
 	{
+		if (qw < 0) break;
 		fwrite(&qw, sizeof(char), 1, a);
 	}
 
@@ -66,6 +70,7 @@ void Kont::Write(FILE* a)
 	// writing a name
 	for (char qw : name)
 	{
+		if (qw < 0) break;
 		fwrite(&qw, sizeof(char), 1, a);
 	}
 	fwrite(&uy, sizeof(char), 1, a);
@@ -75,7 +80,7 @@ void Kont::Write(FILE* a)
 	fwrite(&uy, sizeof(char), 1, a);
 
 	// writing mobile phone
-	for (int i = 0; i < 13; i++)
+	for (int i = 0; i < 13 && nom[i] > 0; i++)
 	{
 		fwrite(&nom[i], sizeof(char), 1, a);
 	}
@@ -87,15 +92,20 @@ void Kont::Write(FILE* a)
 
 	// writing city
 	for (char qw : city)
+	{
+		if (qw < 0) break;
 		fwrite(&qw, sizeof(char), 1, a);
-
+	}
 	// separate city and occupation
 	uy = ' ';
 	fwrite(&uy, sizeof(char), 1, a);
 
 	// writing occupation
 	for (char qw : job)
+	{
+		if (qw < 0) break;
 		fwrite(&qw, sizeof(char), 1, a);
+	}
 
 	// separate occupation and birthdate
 	uy = ' ';
@@ -104,9 +114,12 @@ void Kont::Write(FILE* a)
 	// writing birthdate
 	// year
 	char temp[4] = { "" };
+	int t1 = date.year, t2 = 0;
 	for (int i = 0; i < 4; i++)
 	{
-		temp[i] = (char)(48 + date.year / pow(10, 3 - i));
+		t2 = t1 % 10;
+		temp[3 - i] = (char)(48 + t2);
+		t1 /= 10;
 	}
 	for (char qw : temp)
 		fwrite(&qw, sizeof(int), 1, a);
@@ -115,10 +128,13 @@ void Kont::Write(FILE* a)
 	fwrite(&uy, sizeof(char), 1, a);
 
 	// month
-	char temp2[4] = { "" };
+	char temp2[2] = { "" };
+	 t1 = date.month, t2 = 0;
 	for (int i = 0; i < 2; i++)
 	{
-		temp2[i] = (char)(48 + date.month / pow(10, 3 - i));
+		t2 = t1 % 10;
+		temp2[1 - i] = (char)(48 + t2);
+		t1 /= 10;
 	}
 	for (char qw : temp2)
 		fwrite(&qw, sizeof(char), 1, a);
@@ -127,10 +143,13 @@ void Kont::Write(FILE* a)
 	fwrite(&uy, sizeof(char), 1, a);
 
 	// day
-	char temp3[4] = { "" };
+	char temp3[2] = { "" };
+	 t1 = date.day, t2 = 0;
 	for (int i = 0; i < 2; i++)
 	{
-		temp3[i] = (char)(48 + date.day / pow(10, 3 - i));
+		t2 = t1 % 10;
+		temp3[1 - i] = (char)(48 + t2);
+		t1 /= 10;
 	}
 	for (char qw : temp3)
 		fwrite(&qw, sizeof(char), 1, a);
@@ -236,15 +255,60 @@ void Kont::AddCont(FILE* a)
 	int year, month, day;
 
 	cout << "Enter a surname: ";
-	cin.getline(surname, 64);
+	while (strlength(surname) == 0)
+	{
+		cin.getline(surname, 64); 
+		while (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(32767, '\n');
+			cin.getline(surname, 64);
+		}
+	}
 	cout << "Enter a name: ";
-	cin.getline(name, 64);
+	while (strlength(name) == 0)
+	{
+		cin.getline(name, 64);
+		while (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(32767, '\n');
+			cin.getline(name, 64);
+		}
+	}
 	cout << "Enter the number: +380";
-	cin.getline(nom, 9);
+	while (strlength(nom) == 0)
+	{
+		cin.getline(nom, 64);
+		while (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(32767, '\n');
+			cin.getline(nom, 64);
+		}
+	}
 	cout << "Enter a native city: ";
-	cin.getline(city, 64);
+	while (strlength(city) == 0)
+	{
+		cin.getline(city, 64);
+		while (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(32767, '\n');
+			cin.getline(city, 64);
+		}
+	}
 	cout << "Enter an occupation: ";
-	cin.getline(job, 64);
+	while (strlength(job) == 0)
+	{
+		cin.getline(job, 64);
+		while (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(32767, '\n');
+			cin.getline(job, 64);
+		}
+	}
 	cout << "Enter your birthdate:" << endl;
 	cout << "Year: ";
 	cin >> year;
@@ -738,6 +802,6 @@ void Kont::ChangeBirth()
 int Kont::strlength(char* str)
 {
 	int i = 0;
-	while (str[i] != '\0') i++;
+	while (str[i] != '\0' && str[i] > 0) i++;
 	return i;
 }

@@ -365,7 +365,6 @@ void Kont::AddCont(FILE* a)
 	
 	if (!SetKont(surname, name, numb, city, job, year, month, day))
 	{
-		
 		cout << "Please enter the contact again" << endl;
 		system("pause");
 		system("cls");
@@ -378,7 +377,6 @@ void Kont::AddCont(FILE* a)
 	Display();
 	system("pause");
 	system("cls");
-
 }
 
 void Kont::EditCont(FILE* a)
@@ -388,6 +386,7 @@ void Kont::EditCont(FILE* a)
 	int i = 0;
 	int nKont = 0;
 	int ch;
+
 	// here we count how many contacts the file has
 	while ((ch = getc(a)) != EOF)
 	{
@@ -400,11 +399,11 @@ void Kont::EditCont(FILE* a)
 	int Regulator = 0;
 	char surname[64], name[64], nom[13], city[64], job[64];
 	int year, month, day;
+	bool flag = true;
 	fseek(a, 0, SEEK_SET);
 	int j = 0;
 	while ((ch = getc(a)) != EOF)
 	{
-
 		if (ch == 10)
 		{
 			Regulator++;
@@ -416,48 +415,59 @@ void Kont::EditCont(FILE* a)
 		}
 		if (ch == 32)
 		{
-			Regulator++;
-			j = 0;
-			continue;
+			if (flag)
+			{
+				flag = false;
+				Regulator++;
+				j = 0;
+				continue;
+			}
 		}
-
 		if (Regulator == 0)
 		{
+			flag = true;
 			surname[j] = (char)ch;
 			j++;
 		}
 		else if (Regulator == 1)
 		{
+			flag = true;
 			name[j] = (char)ch;
 			j++;
 		}
 		else if (Regulator == 2)
 		{
+			flag = true;
 			nom[j] = (char)ch;
 			j++;
 		}
 		else if (Regulator == 3)
 		{
+			flag = true;
 			city[j] = (char)ch;
 			j++;
 		}
 		else if (Regulator == 4)
 		{
+			flag = true;
 			job[j] = (char)ch;
 			j++;
 		}
 		else if (Regulator == 5)
 		{
+			flag = true;
 			year = ch - '0';
 			j++;
 		}
 		else if (Regulator == 6)
 		{
+			flag = true;
 			month = ch - '0';
 			j++;
 		}
 		else
 		{
+			flag = true;
 			day = ch - '0';
 			j++;
 		}

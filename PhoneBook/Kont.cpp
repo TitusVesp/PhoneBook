@@ -395,7 +395,7 @@ void Kont::EditCont(FILE* a)
 
 	// here we form the 'Kont* mas'
 	int Regulator = 0;
-	char surname[64], name[64], nom[13], city[64], job[64];
+	char surname[64] = { "\0" }, name[64] = { "\0" }, nom[64] = { "\0" }, city[64] = { "\0" }, job[64] = { "\0" };
 	int year = 0, month = 0, day = 0;
 	bool flag = true;
 	fseek(a, 0, SEEK_SET);
@@ -407,6 +407,8 @@ void Kont::EditCont(FILE* a)
 			Regulator++;
 			Regulator = Regulator % 8;
 			mas[i].SetKont(surname, name, nom, city, job, year, month, day);
+			year = month = day = 0;
+			for (int i = 0; i < 64; i++) surname[i] = name[i] = nom[i] = city[i] = job[i] = 'a';
 			i++;
 			j = 0;
 			continue;

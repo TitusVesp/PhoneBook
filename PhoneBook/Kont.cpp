@@ -250,8 +250,6 @@ void Kont::ContDisplay(FILE* a)
 
 void Kont::AddCont(FILE* a)
 {
-
-
 	char surname[64], name[64], nom[13], city[64], job[64];
 	int year, month, day;
 
@@ -294,7 +292,6 @@ void Kont::AddCont(FILE* a)
 	cout << "Enter a native city: ";
 	while (strlength(city) == 0)
 	{
-		cout << "Incorrect input!" << endl;
 		cin.getline(city, 65);
 		while (cin.fail())
 		{
@@ -653,8 +650,6 @@ void Kont::MENU(FILE* a)
 		MENU(a);
 }
 
-
-
 bool Kont::Is_Surname_Corr(char* name)
 {
 	if (strlength(name) == 0) return false;
@@ -719,7 +714,6 @@ bool Kont::Is_Birth_Corr(int year, int month, int day)
 
 	return true;
 }
-
 
 void Kont::ChangeSurname()
 {

@@ -1,7 +1,7 @@
 #include "Kont.h"
 #define Is_Name_Corr Is_Surname_Corr
-
-void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], char occ[64], int year1, int month1, int day1)
+using namespace std;
+bool Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], char occ[64], int year1, int month1, int day1)
 {
 	{
 		// surname
@@ -11,7 +11,10 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 				surname[i] = surnam[i];
 		}
 		else
+		{
 			cout << "The surname is incorrect" << endl;
+			return false;
+		}
 
 		// name
 		if (Is_Name_Corr(nam))
@@ -20,14 +23,20 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 				name[i] = nam[i];
 		}
 		else
+		{
 			cout << "The name is incorrect" << endl;
+			return false;
+		}
 
 		// phone number
 		if (Is_Num_Corr(num))
 			for (int i = 0; i < 9; i++)
 				nom[i + 4] = num[i];
 		else
+		{
 			cout << "The number is incorrect" << endl;
+			return false;
+		}
 
 		// Occupation
 		for (int i = 0; i < 64 && occ[i] > 0; i++)
@@ -41,15 +50,24 @@ void Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], ch
 				city[i] = town[i];
 		}
 		else
+		{
 			cout << "The city is incorrect" << endl;
+			return false;
+		}
 
 		// Birthdate
 		if (Is_Birth_Corr(year1, month1, day1))
 		{
-			 date.year = year1;
-			 date.month = month1; 
-			 date.day = day1;
+			date.year = year1;
+			date.month = month1;
+			date.day = day1;
 		}
+		else
+		{
+			cout << "The birthdate is incorrect" << endl;
+			return false;
+		}
+		return true;
 	}
 }
 
@@ -114,23 +132,24 @@ void Kont::Write(FILE* a)
 
 	// writing birthdate
 	// year
-	char temp[4] = { "" };
+	char temp;
 	int t1 = date.year, t2 = 0;
 	for (int i = 0; i < 4; i++)
 	{
 		t2 = t1 % 10;
-		temp[3 - i] = (char)(48 + t2);
+		temp = (char)(48 + t2);
+		fwrite(&temp, sizeof(char), 1, a);
 		t1 /= 10;
 	}
-	for (char qw : temp)
-		fwrite(&qw, sizeof(int), 1, a);
+
+
 
 	uy = ' ';
 	fwrite(&uy, sizeof(char), 1, a);
 
 	// month
 	char temp2[2] = { "" };
-	 t1 = date.month, t2 = 0;
+	t1 = date.month, t2 = 0;
 	for (int i = 0; i < 2; i++)
 	{
 		t2 = t1 % 10;
@@ -145,7 +164,7 @@ void Kont::Write(FILE* a)
 
 	// day
 	char temp3[2] = { "" };
-	 t1 = date.day, t2 = 0;
+	t1 = date.day, t2 = 0;
 	for (int i = 0; i < 2; i++)
 	{
 		t2 = t1 % 10;
@@ -250,13 +269,13 @@ void Kont::ContDisplay(FILE* a)
 
 void Kont::AddCont(FILE* a)
 {
-	char surname[64], name[64], nom[13], city[64], job[64];
+	char surname[64], name[64], numb[13], city[64], job[64];
 	int year, month, day;
 
 	cout << "Enter a surname: ";
 	while (strlength(surname) == 0)
 	{
-		cin.getline(surname, 65); 
+		cin.getline(surname, 65);
 		while (cin.fail())
 		{
 			cout << "Incorrect input!" << endl;
@@ -278,15 +297,16 @@ void Kont::AddCont(FILE* a)
 		}
 	}
 	cout << "Enter the number: +380";
-	while (strlength(nom) == 0)
+	while (strlength(numb) == 0)
 	{
-		cin.getline(nom, 65);
+		cin.getline(numb, 10);
 		while (cin.fail())
 		{
 			cout << "Incorrect input!" << endl;
 			cin.clear();
 			cin.ignore(32767, '\n');
-			cin.getline(nom, 13);
+			cout << "+380";
+			cin.getline(numb, 10);
 		}
 	}
 	cout << "Enter a native city: ";
@@ -342,13 +362,20 @@ void Kont::AddCont(FILE* a)
 		cin >> day;
 	}
 
-	Kont ret;
-	ret.SetKont(surname, name, nom, city, job, year, month, day);
-	ret.Write(a);
+	
+	if (!SetKont(surname, name, numb, city, job, year, month, day))
+	{
+		
+		cout << "Please enter the contact again" << endl;
+		system("pause");
+		system("cls");
+		AddCont(a);
+	}
+	Write(a);
 
 	system("cls");
 	cout << "The contact was successfully added" << endl;
-	ret.Display();
+	Display();
 	system("pause");
 	system("cls");
 

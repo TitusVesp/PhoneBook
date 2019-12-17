@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <conio.h>
+#pragma warning (disable: 4996)
 
 using namespace std;
 
@@ -25,7 +26,7 @@ private:
 	void ChangeJob();
 	void ChangeBirth();
 public:
-	void SetKont(char surnam[64], char nam[64], char num[9], char town[64], char occ[64], int year1, int month1, int day1);
+	bool SetKont(char surnam[64], char nam[64], char num[9], char town[64], char occ[64], int year1, int month1, int day1);
 	void Write(FILE* a);
 	void Display();
 	void EditKont();

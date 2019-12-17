@@ -1,6 +1,7 @@
 #include "Kont.h"
 #define Is_Name_Corr Is_Surname_Corr
 using namespace std;
+
 bool Kont::SetKont(char surnam[64], char nam[64], char num[9], char town[64], char occ[64], int year1, int month1, int day1)
 {
 	{
@@ -185,32 +186,28 @@ void Kont::Display()
 {
 	cout << "Surname: ";
 	for (char qw : surname)
-		if (qw > 0)
-			cout << qw;
+		if (qw < 0) cout << qw;
+
 	cout << endl;
 
 	cout << "Name: ";
 	for (char qw : name)
-		if (qw > 0)
-			cout << qw;
+		if (qw > 0) cout << qw;
 	cout << endl;
 
 	cout << "Mobile phone: ";
 	for (char qw : nom)
-		if (qw > 0)
-			cout << qw;
+		if (qw > 0) cout << qw;
 	cout << endl;
 
 	cout << "Native city: ";
 	for (char qw : city)
-		if (qw > 0)
-			cout << qw;
+		if (qw > 0) cout << qw;
 	cout << endl;
 
 	cout << "Occupation: ";
 	for (char qw : job)
-		if (qw > 0)
-			cout << qw;
+		if (qw > 0) cout << qw;
 	cout << endl;
 
 	cout << "Birthday: ";
@@ -229,6 +226,7 @@ void Kont::EditKont()
 	cout << "1 - Surname" << endl << "2 - Name" << endl;
 	cout << "3 - Mobile phone" << endl << "4 - Native city" << endl << "5 - Occupation" << endl;
 	cout << "6 - Birthdate";
+	cout << endl;
 	char r;
 	cin >> r;
 	switch (r)
@@ -398,7 +396,7 @@ void Kont::EditCont(FILE* a)
 	// here we form the 'Kont* mas'
 	int Regulator = 0;
 	char surname[64], name[64], nom[13], city[64], job[64];
-	int year, month, day;
+	int year = 0, month = 0, day = 0;
 	bool flag = true;
 	fseek(a, 0, SEEK_SET);
 	int j = 0;
@@ -456,19 +454,19 @@ void Kont::EditCont(FILE* a)
 		else if (Regulator == 5)
 		{
 			flag = true;
-			year = ch - '0';
+			year += (ch - '0') * pow (10, 3 - j);
 			j++;
 		}
 		else if (Regulator == 6)
 		{
 			flag = true;
-			month = ch - '0';
+			month += (ch - '0') * pow(10, 1 - j);
 			j++;
 		}
 		else
 		{
 			flag = true;
-			day = ch - '0';
+			day += (ch - '0') * pow(10, 1 - j);
 			j++;
 		}
 	}

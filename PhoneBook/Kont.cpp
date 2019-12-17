@@ -261,6 +261,7 @@ void Kont::AddCont(FILE* a)
 		cin.getline(surname, 65); 
 		while (cin.fail())
 		{
+			cout << "Incorrect input!" << endl;
 			cin.clear();
 			cin.ignore(32767, '\n');
 			cin.getline(surname, 65);
@@ -272,6 +273,7 @@ void Kont::AddCont(FILE* a)
 		cin.getline(name, 65);
 		while (cin.fail())
 		{
+			cout << "Incorrect input!" << endl;
 			cin.clear();
 			cin.ignore(32767, '\n');
 			cin.getline(name, 65);
@@ -283,17 +285,20 @@ void Kont::AddCont(FILE* a)
 		cin.getline(nom, 65);
 		while (cin.fail())
 		{
+			cout << "Incorrect input!" << endl;
 			cin.clear();
 			cin.ignore(32767, '\n');
-			cin.getline(nom, 65);
+			cin.getline(nom, 13);
 		}
 	}
 	cout << "Enter a native city: ";
 	while (strlength(city) == 0)
 	{
+		cout << "Incorrect input!" << endl;
 		cin.getline(city, 65);
 		while (cin.fail())
 		{
+			cout << "Incorrect input!" << endl;
 			cin.clear();
 			cin.ignore(32767, '\n');
 			cin.getline(city, 65);
@@ -305,6 +310,7 @@ void Kont::AddCont(FILE* a)
 		cin.getline(job, 65);
 		while (cin.fail())
 		{
+			cout << "Incorrect input!" << endl;
 			cin.clear();
 			cin.ignore(32767, '\n');
 			cin.getline(job, 65);
